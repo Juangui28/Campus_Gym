@@ -88,7 +88,7 @@
 </head>
 <body>
     <div class="login-container">
-        <img src="profile.png" alt="Imagen de perfil">
+        <img src="Fotos/profile.png" alt="Imagen de perfil">
         <h2>Iniciar Sesión</h2>
         <form action="index.php" method="post">
             <label for="username">Nombre de Usuario</label>

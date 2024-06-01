@@ -142,7 +142,7 @@
           <br>
 
           <label>Enfermedad</label>
-          <input type="text" name="enfermedad" class="form-control" value="<?php echo $celular;?>" required/>
+          <input type="text" name="enfermedad" class="form-control" value="<?php echo $enfermedad;?>" required/>
           <br>
           
           <!-- Aqui van los planes, deben ser actualizados-->

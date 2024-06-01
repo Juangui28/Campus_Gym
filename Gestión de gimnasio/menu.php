@@ -1,7 +1,21 @@
 <?php
     session_start(); // Iniciar la sesión
-    $usuario = $_SESSION['username'];
-?>
+    $usuario = ucfirst($_SESSION['username']);
+    
+    // Incluir la conexión a la base de datos
+    include 'db/conexion.php';
+
+    // Escapar la variable para usarla en la consulta SQL
+    $usuarioEscapado = mysqli_real_escape_string($conn, $usuario);
+
+    // Consulta para contar los usuarios inactivos
+    $sqlInactivos = "SELECT COUNT(*) as count FROM cliente WHERE Codigo_estado = 2 AND Usuario = '$usuarioEscapado'";
+    $resultInactivos = mysqli_query($conn, $sqlInactivos);
+    $countInactivos = 0;
+    if ($row = mysqli_fetch_assoc($resultInactivos)) {
+        $countInactivos = $row['count'];
+    }
+?>  
 
 <!DOCTYPE html>
 <html>
@@ -42,6 +56,7 @@
             border-radius: 5px;
             transition: background-color 0.3s;
             width: 207px;
+            position: relative;
         }
 
         .btn:hover {
@@ -55,28 +70,47 @@
         .btn-exit:hover {
             background-color: #d32f2f;
         }
+
+        .notification {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            padding: 5px 10px;
+            border-radius: 50%;
+            background-color: red;
+            color: white;
+            font-size: 12px;
+        }
     </style>
 </head>
 <body>
-    <img src="pesas.png" alt="Imagen de perfil">
+    <img src="Fotos/pesas.png" alt="Imagen de perfil">
     <div class="container">
         <h1>Bienvenido, <?php echo htmlspecialchars($usuario); ?>!</h1>
         <form method="GET" action="#">
             <div class="btn-grid">
-                <button class="btn" type="submit" name="opcion" value="registro.php">Gestión de información de clientes</button>
-                <button class="btn" type="submit" name="opcion" value="editarEliminar.php">Modificación y eliminación de clientes</button>
-                <button class="btn" type="submit" name="opcion" value="calendario.php">Agenda</button>
-                <button class="btn" type="submit" name="opcion" value="inactivos.php">Clientes inactivos</button>
+                <?php
+                    if ($usuario === 'Admin') {
+                        echo '<button class="btn" type="submit" name="opcion" value="registro.php">Gestión de información de clientes</button>';
+                        echo '<button class="btn" type="submit" name="opcion" value="editarEliminar.php">Modificación y eliminación de clientes</button>';
+                        echo '<button class="btn" type="submit" name="opcion" value="calendario.php">Agenda</button>';
+                        echo '<button class="btn" type="submit" name="opcion" value="inactivos.php">Clientes inactivos';
+                        if ($countInactivos > 0) {
+                            echo '<span class="notification">' . $countInactivos . '</span>';
+                        }
+                        echo '</button>';
+                    }
+                ?>
                 <button class="btn btn-exit" type="submit" name="opcion" value="index.php">Salir</button>
             </div>
         </form>
 
         <?php
-            if (isset($_GET['opcion'])) {
-                $opcion = $_GET['opcion'];
-                header("Location: $opcion");
-                exit();
-            }
+        if (isset($_GET['opcion'])) {
+            $opcion = $_GET['opcion'];
+            header("Location: $opcion");
+            exit();
+        }
         ?>
     </div>
 </body>

@@ -4,7 +4,7 @@
     define('HOST','localhost');
     define('USER','root');
     define('PASSWORD','');
-    define('DB_NAME','campus_gym');
+    define('DB_NAME','gimnasio_bd');
 
     try{
         $conn = mysqli_connect(HOST,USER,PASSWORD,DB_NAME);

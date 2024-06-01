@@ -1,9 +1,14 @@
+<?php
+    session_start(); // Iniciar la sesión
+    $usuario = ucfirst($_SESSION['username']);
+?>  
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-    <title>Calendario con Recordatorios</title>
+    <title>Agenda</title>
     <!-- JQuery -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <!-- Alertas-->
@@ -182,7 +187,7 @@
     </style>
 </head>
 <body>
-    <h1>Calendario con Recordatorios</h1>
+    <h1>Calendario de <?php echo htmlspecialchars($usuario); ?></h1>
     <div class="calendar">
         <?php
         include 'db/conexion.php';
@@ -287,7 +292,7 @@
     </div>
 
     <div class="form-container">
-        <h2>Agregar Recordatorio</h2>
+        <h2><?php echo htmlspecialchars($usuario); ?>, crea tus recordatorios!</h2>
         <form action="add_recordatorio.php" method="post">
             <label for="titulo">Título:</label>
             <input type="text" id="titulo" name="titulo" required><br>

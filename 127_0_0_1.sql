@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 29-05-2024 a las 05:35:06
+-- Tiempo de generación: 01-06-2024 a las 17:21:45
 -- Versión del servidor: 10.4.24-MariaDB
 -- Versión de PHP: 8.1.6
 
@@ -18,15 +18,17 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Base de datos: `campus_gym`
+-- Base de datos: `gimnasio_bd`
 --
-CREATE DATABASE IF NOT EXISTS `campus_gym` DEFAULT CHARACTER SET utf8 COLLATE utf8_spanish2_ci;
-USE `campus_gym`;
+CREATE DATABASE IF NOT EXISTS `gimnasio_bd` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+USE `gimnasio_bd`;
 
 -- --------------------------------------------------------
 
 --
 -- Estructura de tabla para la tabla `cliente`
+--
+-- Creación: 01-06-2024 a las 14:17:33
 --
 
 CREATE TABLE `cliente` (
@@ -50,6 +52,8 @@ CREATE TABLE `cliente` (
 --
 -- Estructura de tabla para la tabla `estado`
 --
+-- Creación: 01-06-2024 a las 14:17:33
+--
 
 CREATE TABLE `estado` (
   `Codigo_estado` int(1) NOT NULL,
@@ -68,6 +72,8 @@ INSERT INTO `estado` (`Codigo_estado`, `Estado`) VALUES
 
 --
 -- Estructura de tabla para la tabla `planes_gym`
+--
+-- Creación: 01-06-2024 a las 14:17:33
 --
 
 CREATE TABLE `planes_gym` (
@@ -91,6 +97,8 @@ INSERT INTO `planes_gym` (`Codigo_plan`, `Nombre_plan`, `Descripcion`, `Valor`) 
 --
 -- Estructura de tabla para la tabla `recordatorios`
 --
+-- Creación: 01-06-2024 a las 14:17:33
+--
 
 CREATE TABLE `recordatorios` (
   `id` int(11) NOT NULL,
@@ -104,6 +112,8 @@ CREATE TABLE `recordatorios` (
 
 --
 -- Estructura de tabla para la tabla `tipo_sangre`
+--
+-- Creación: 01-06-2024 a las 14:17:33
 --
 
 CREATE TABLE `tipo_sangre` (
@@ -130,6 +140,8 @@ INSERT INTO `tipo_sangre` (`Codigo_rh`, `Grupo`) VALUES
 --
 -- Estructura de tabla para la tabla `tipo_usuario`
 --
+-- Creación: 01-06-2024 a las 14:17:33
+--
 
 CREATE TABLE `tipo_usuario` (
   `Codigo_usuario` int(1) NOT NULL,
@@ -148,6 +160,8 @@ INSERT INTO `tipo_usuario` (`Codigo_usuario`, `Usuario`) VALUES
 
 --
 -- Estructura de tabla para la tabla `usuario`
+--
+-- Creación: 01-06-2024 a las 14:17:33
 --
 
 CREATE TABLE `usuario` (
