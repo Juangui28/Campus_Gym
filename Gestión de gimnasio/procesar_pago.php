@@ -20,6 +20,8 @@
         mysqli_stmt_bind_param($stmt_update_estado, "s", $cedula);
         mysqli_stmt_execute($stmt_update_estado);
 
+        // Redireccionar a la página de clientes inactivos
         header("Location: inactivos.php");
     } 
 ?>
+    

@@ -1,17 +1,19 @@
 <?php
+    // Incluir el archivo de conexión a la base de datos
     include 'db/conexion.php';
 
+    // Consultar el número total de clientes inactivos
     $sqlCountInactivos = "SELECT COUNT(*) AS total_inactivos FROM cliente WHERE Codigo_estado = 2";
     $resultadoCountInactivos = mysqli_query($conn, $sqlCountInactivos);
     $filaCountInactivos = mysqli_fetch_assoc($resultadoCountInactivos);
     $totalInactivos = $filaCountInactivos['total_inactivos'];
     
 
-    //?  Consulta SQL para obtener la fecha de ingreso de cada cliente
+    // Consulta SQL para obtener la fecha de ingreso de cada cliente
     $sqlFechaIngreso = "SELECT Cedula, Fecha_ingreso FROM cliente";
     $resultadoFechaIngreso = mysqli_query($conn, $sqlFechaIngreso);
 
-    // Comparar la fecha de ingreso con la fecha actual
+    // Comparar la fecha de ingreso con la fecha actual y actualizar el estado si ha pasado más de un mes
     while ($fila = mysqli_fetch_assoc($resultadoFechaIngreso)) {
         $cedulaCliente = $fila['Cedula'];
         $fechaIngresoCliente = strtotime($fila['Fecha_ingreso']);
@@ -61,6 +63,7 @@
 </head>
 <body>
     <?php
+        // Incluir archivos de conexión y cliente
         include 'db/conexion.php';
         include 'cliente.php';
     ?>
@@ -76,27 +79,28 @@
             </div>
         </form>
         <?php
+            // Iniciar sesión y obtener los parámetros de búsqueda
             session_start();
-
             $cedula_busqueda = isset($_GET["cedula_busqueda"]) ? htmlspecialchars($_GET["cedula_busqueda"]) : '';
             $usuario = isset($_SESSION['username']) ? htmlspecialchars($_SESSION['username']) : '';
             $codigo = '2';
 
+            // Realizar la búsqueda de clientes inactivos según los parámetros proporcionados
             if ($cedula_busqueda && $usuario) {
                 $sql_busqueda = "SELECT c.Cedula, c.Nombre, c.Apellido, c.Fecha_ingreso, c.Celular, pg.Nombre_plan, e.Estado 
                                     FROM cliente AS c 
                                     JOIN estado AS e ON c.Codigo_estado = e.Codigo_estado 
                                     JOIN planes_gym AS pg ON c.Codigo_plan = pg.Codigo_plan
                                     WHERE c.Cedula LIKE ? AND c.Usuario LIKE ? AND c.Codigo_estado LIKE ?";
-            
                 $stmt_busqueda = $conn->prepare($sql_busqueda);
                 $like_cedula = "%$cedula_busqueda%";
                 $like_usuario = "%$usuario%";
-                $like_codigo = "%$codigo%";  // Asegúrate de que $codigo esté definida
+                $like_codigo = "%$codigo%";  // Asegúrate de que $codigo esté definido
                 $stmt_busqueda->bind_param("sss", $like_cedula, $like_usuario, $like_codigo);
                 $stmt_busqueda->execute();
                 $resultado = $stmt_busqueda->get_result();
             
+                // Mostrar resultados en una tabla
                 echo "<table class='table'>
                         <thead>
                             <tr>
@@ -129,11 +133,13 @@
                     </tr>";
 
                 }
+                // Cerrar la tabla y agregar enlace para regresar al menú
                 echo "</tbody></table>
                         <a href='menu.php'><i class='fa-solid fa-person-running'></i> Regresar</a>";
                 $stmt_busqueda->close();
             
             } else {
+                // Consultar clientes inactivos para el usuario actual
                 $sql = "SELECT c.Cedula, c.Nombre, c.Apellido, c.Fecha_ingreso, c.Celular, pg.Nombre_plan, e.Estado 
                         FROM cliente AS c 
                         JOIN estado AS e ON c.Codigo_estado = e.Codigo_estado 
@@ -142,11 +148,12 @@
             
                 $stmt = $conn->prepare($sql);
                 $like_usuario = "%$usuario%";
-                $like_codigo = "%$codigo%";  // Asegúrate de que $codigo esté definida
+                $like_codigo = "%$codigo%";  // Asegúrate de que $codigo esté definido
                 $stmt->bind_param("ss", $like_usuario, $like_codigo);
                 $stmt->execute();
                 $resultado = $stmt->get_result();
             
+                // Mostrar resultados en una tabla
                 echo "<table class='table'>
                         <thead>
                             <tr>
@@ -178,6 +185,7 @@
                         </td>
                     </tr>";
                 }
+                // Cerrar la tabla y agregar enlace para regresar al menú
                 echo "</tbody></table>
                         <a href='menu.php'><i class='fa-solid fa-person-running'></i> Regresar</a>";
                 $stmt->close();
@@ -185,6 +193,7 @@
         ?>
     </div>
 </body>
+    <!-- Script para manejar eventos de clic en los botones de pago -->
     <script>
         $(document).ready(function () {
             $(".btn-pago").click(function () {
@@ -204,4 +213,4 @@
             });
         });
     </script>
-</html>
+</html>        

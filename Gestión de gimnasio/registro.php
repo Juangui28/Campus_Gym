@@ -1,17 +1,23 @@
+<!-- Declaración del tipo de documento y etiqueta HTML -->
 <!DOCTYPE html>
 <html>
 <head>
+    <!-- Título de la página -->
     <title>Registro de usuarios</title>
+    <!-- Estilos CSS -->
     <style>
+        /* Estilos para el cuerpo de la página */
         body {
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
         }
+        /* Estilos para el contenedor principal */
         .container {
             text-align: center;
             margin-top: 50px;
         }
+        /* Estilos para el encabezado */
         h1 {
             color: #333;
             font-size: 40px;
@@ -21,6 +27,7 @@
             text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
         }
     </style>
+    <!-- Codificación de caracteres -->
     <meta charset="utf-8">
     <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
@@ -29,20 +36,24 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <!-- JQuery -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    <!-- Alertas-->
+    <!-- Alertas -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
+    <!-- Inclusión de archivos PHP -->
     <?php
         include 'db/conexion.php';
         include 'cliente.php';
         include 'modalCrear.php';
         include 'modalInfo.php';
     ?>
+    <!-- Contenedor principal -->
     <div class="container">
+        <!-- Encabezado -->
         <br>
         <h1>Bienvenido a nuestro gimnasio</h1>
         <br>
+        <!-- Formulario de búsqueda -->
         <form action="registro.php" method="GET" class="mb-3">
             <div class="input-group">
                 <input type="text" class="form-control" placeholder="Buscar por cédula" name="cedula_busqueda" value="<?php echo isset($_GET['cedula_busqueda']) ? htmlspecialchars($_GET['cedula_busqueda']) : ''; ?>">
@@ -50,12 +61,12 @@
                 <a href="registro.php" class="btn btn-secondary ms-2"><i class="fa-solid fa-eraser"></i> Limpiar</a>
             </div>
         </form>
+        <!-- PHP para actualizar el estado del cliente -->
         <?php
             session_start();
 
             $sqlUpdateEstado = "UPDATE cliente SET Codigo_estado = 2 WHERE DATEDIFF(CURDATE(), Fecha_ingreso) > 30";
             mysqli_query($conn, $sqlUpdateEstado);
-
 
             $cedula_busqueda = isset($_GET["cedula_busqueda"]) ? htmlspecialchars($_GET["cedula_busqueda"]) : '';
             $usuario = isset($_SESSION['username']) ? htmlspecialchars($_SESSION['username']) : '';
@@ -140,8 +151,8 @@
                                 </th>
                             </tr>
                         </thead>
-                        <tbody>
-                    ";
+                    <tbody>
+                ";
                 while($row = $resultado->fetch_assoc()){
                     $cedula = htmlspecialchars($row['Cedula']);
                     $nombre = htmlspecialchars($row['Nombre']);

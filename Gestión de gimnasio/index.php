@@ -1,35 +1,42 @@
 <?php
+    // Incluye el archivo de conexión a la base de datos
     include "db/conexion.php";
-    session_start(); // Iniciar la sesión
+    // Inicia la sesión
+    session_start();
 
+    // Verifica si se ha enviado el formulario de inicio de sesión
     if (isset($_POST["iniciar"])) {
 
+        // Obtiene el nombre de usuario y la contraseña del formulario y los convierte a minúsculas
         $usuario = strtolower($_POST["username"]);
         $contrasena = strtolower($_POST["password"]);
 
+        // Consulta SQL para verificar las credenciales del usuario en la base de datos
         $sql = "SELECT * FROM usuario WHERE Usuario = ? AND Contraseña = ?";
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("ss", $usuario, $contrasena);
         $stmt->execute();
         $resultado = $stmt->get_result();
 
+        // Si se encuentra un registro que coincide, inicia sesión y redirige al usuario al menú
         if ($resultado->num_rows == 1) {
             $_SESSION['username'] = $usuario;
             $_SESSION['show_alert'] = true; // Variable de sesión para mostrar la alerta
             header("location: menu.php");
             exit();
         } else {
+            // Si no se encuentra ninguna coincidencia, muestra un mensaje de error
             $error = "Usuario y/o contraseña incorrectos";
         }
     }
 ?>
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
+    <!-- Estilos CSS -->
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -83,13 +90,15 @@
     </style>
     <!-- JQuery -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    <!-- Alertas-->
+    <!-- Alertas -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
+    <!-- Contenedor del formulario de inicio de sesión -->
     <div class="login-container">
         <img src="Fotos/profile.png" alt="Imagen de perfil">
         <h2>Iniciar Sesión</h2>
+        <!-- Formulario de inicio de sesión -->
         <form action="index.php" method="post">
             <label for="username">Nombre de Usuario</label>
             <input type="text" id="username" name="username" required>
@@ -99,6 +108,7 @@
             
             <input type="submit" value="Iniciar Sesión" name="iniciar">
         </form>
+        <!-- Muestra el mensaje de error si existe -->
         <?php if(isset($error)) { echo '<p class="error">' . $error . '</p>'; } ?>
     </div>
 </body>
