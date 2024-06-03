@@ -43,8 +43,13 @@
           </script>
         ";
       }else{
-        $user = new Cliente($_POST["cedula"],$_POST["nombre"],$_POST["apellido"],$_POST["fechaIngreso"],$_POST["celular"],$_POST["codigoRh"],$_POST["enfermedad"],$_POST["codigoPlan"],1,$_POST["edad"],$_POST["peso"],$_POST["celularEmergencia"],$usuario);
-        $user->actualizar();
+        if ($timestamp_actual - $fecha_timestamp > 30 * 24 * 60 * 60) {
+          $user = new Cliente($_POST["cedula"],$_POST["nombre"],$_POST["apellido"],$_POST["fechaIngreso"],$_POST["celular"],$_POST["codigoRh"],$_POST["enfermedad"],$_POST["codigoPlan"],2,$_POST["edad"],$_POST["peso"],$_POST["celularEmergencia"],$usuario);
+          $user->actualizar();
+        }else{
+          $user = new Cliente($_POST["cedula"],$_POST["nombre"],$_POST["apellido"],$_POST["fechaIngreso"],$_POST["celular"],$_POST["codigoRh"],$_POST["enfermedad"],$_POST["codigoPlan"],1,$_POST["edad"],$_POST["peso"],$_POST["celularEmergencia"],$usuario);
+          $user->actualizar();
+        }
       }
     }
   }
@@ -84,7 +89,8 @@
           <br>
 
           <label>Fecha de ingreso</label>
-          <input type="date" name="fechaIngreso" class="form-control" value="<?php echo $fechaIngreso;?>" required/>
+          <input type="hidden" name="fechaIngreso" value="<?php echo $fechaIngreso;?>"/>
+          <input type="date" class="form-control" value="<?php echo $fechaIngreso;?>" disabled/>
           <br>
 
           <label>Celular</label>
@@ -92,7 +98,8 @@
           <br>
 
           <label>Tipo de sangre</label>
-          <select class="form-select" name="codigoRh" required>
+          <input type="hidden" name="codigoRh" value="<?php echo $codigoRh;?>"/>
+          <select class="form-select" disabled>
             <?php
               for($i = 1; $i <= 8; $i++){
                 $selected = ($codigoRh == $i) ? 'selected' : ''; // Verifica si la opción debe estar seleccionada
@@ -122,7 +129,7 @@
                   case 8:
                     $grupo_sanguineo = 'O-';
                     break;
-                  }
+                }
                 echo "<option value='$i' $selected>$grupo_sanguineo</option>";
               }
             ?>
@@ -130,7 +137,8 @@
           <br>
 
           <label>Edad</label>
-          <input type="number" name="edad" class="form-control" value="<?php echo $edad;?>" required/>
+          <input type="hidden" name="edad" value="<?php echo $edad;?>"/>
+          <input type="number" class="form-control" value="<?php echo $edad;?>" disabled/>
           <br>
 
           <label>Peso</label>
