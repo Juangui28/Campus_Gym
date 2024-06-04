@@ -1,7 +1,23 @@
-<!-- Se incluye la librería jQuery desde el CDN de Google -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-
 <?php
+  // Definir el array $tipos_sangre
+  $tipos_sangre = [
+    1 => "A+",
+    2 => "A-",
+    3 => "B+",
+    4 => "B-",
+    5 => "AB+",
+    6 => "AB-",
+    7 => "O+",
+    8 => "O-"
+  ];
+
+  // Definir el array $planes
+  $planes = [
+    1998 => "Plan Zeus",
+    2376 => "Plan Artemis",
+    4554 => "Plan Kratos"
+  ];
+
   // Verifica si existe el parámetro "info" en la URL
   if(isset($_GET["info"])){
     // Si existe, se muestra el modal de información utilizando jQuery
