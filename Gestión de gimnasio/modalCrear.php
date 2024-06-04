@@ -49,7 +49,7 @@
           if($celular > 3999999999 || $celular < 3000000000){
             echo"
               <script>
-                Swal.fire('Ingresaste un numero invalido')
+                Swal.fire('Ingresaste un numero telefónico invalido')
               </script>
             ";
           }else{
