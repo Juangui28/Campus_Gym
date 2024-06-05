@@ -20,6 +20,7 @@
         $fechaActual = time();
 
         // Si ha pasado más de un mes desde la fecha de ingreso, cambiar el estado a inactivo
+        // 30 * 24 * 60 * 60 se usa para calcular los segundos de un mes, en este caso sería 2,592,000 seg
         if ($fechaActual - $fechaIngresoCliente > 30 * 24 * 60 * 60) {
             $sqlActualizarEstado = "UPDATE cliente SET Codigo_estado = 2 WHERE Cedula = '$cedulaCliente'";
             mysqli_query($conn, $sqlActualizarEstado);
