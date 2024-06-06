@@ -18,6 +18,15 @@
     if ($row = mysqli_fetch_assoc($resultInactivos)) {
         $countInactivos = $row['count'];
     }
+
+    // Obtener la fecha actual en formato YYYY-MM-DD
+    $fechaActual = date("Y-m-d");
+
+    $sqlDelete = "DELETE FROM recordatorios WHERE fecha < ?";
+    $stmt = mysqli_prepare($conn, $sqlDelete);
+    mysqli_stmt_bind_param($stmt, "s", $fechaActual);
+    mysqli_stmt_execute($stmt);
+    mysqli_stmt_close($stmt);
 ?>  
 
 <!DOCTYPE html>
