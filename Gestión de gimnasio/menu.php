@@ -27,6 +27,15 @@
     mysqli_stmt_bind_param($stmt, "s", $fechaActual);
     mysqli_stmt_execute($stmt);
     mysqli_stmt_close($stmt);
+
+    // Consulta SQL para contar los eventos
+    $sqlEventos = "SELECT COUNT(*) as count FROM recordatorios WHERE fecha >= '$fechaActual'";
+    $resultEventos = mysqli_query($conn, $sqlEventos);
+    $countEventos = 0;
+    // Obtener el recuento de usuarios inactivos
+    if ($row = mysqli_fetch_assoc($resultEventos)) {
+        $countEventos = $row['count'];
+    }
 ?>  
 
 <!DOCTYPE html>
@@ -109,7 +118,11 @@
                     if ($usuario === 'Admin') {
                         echo '<button class="btn" type="submit" name="opcion" value="registro.php">Gestión de información de clientes</button>';
                         echo '<button class="btn" type="submit" name="opcion" value="editarEliminar.php">Modificación y eliminación de clientes</button>';
-                        echo '<button class="btn" type="submit" name="opcion" value="calendario.php">Agenda</button>';
+                        echo '<button class="btn" type="submit" name="opcion" value="calendario.php">Agenda';
+                        if ($countEventos > 0) {
+                            echo '<span class="notification">' . $countEventos . '</span>';
+                        }
+                        echo '</button>';
                         echo '<button class="btn" type="submit" name="opcion" value="inactivos.php">Clientes inactivos';
                         // Mostrar notificación si hay clientes inactivos
                         if ($countInactivos > 0) {
