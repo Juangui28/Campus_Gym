@@ -1,6 +1,6 @@
 <?php
-    session_start(); // Iniciar la sesión para mantener datos del usuario
-    $usuario = ucfirst($_SESSION['username']); // Obtener el nombre de usuario desde la sesión y capitalizar la primera letra
+session_start(); // Iniciar la sesión para mantener datos del usuario
+$usuario = ucfirst($_SESSION['username']); // Obtener el nombre de usuario desde la sesión y capitalizar la primera letra
 ?>  
 
 <!DOCTYPE html>
@@ -186,6 +186,22 @@
         .form-container input[type="button"]:hover {
             background-color: #2980b9;
         }
+        
+        .nav-arrows {
+            text-align: center;
+            margin: 20px;
+        }
+
+        .nav-arrows a {
+            text-decoration: none;
+            color: #3498db;
+            font-size: 1.5em;
+            margin: 0 10px;
+        }
+
+        .nav-arrows a:hover {
+            color: #2980b9;
+        }
     </style>
 </head>
 <body>
@@ -195,7 +211,6 @@
         include 'db/conexion.php'; // Incluir archivo de conexión a la base de datos
 
         function draw_calendar($month, $year, $conn) { // Función para dibujar el calendario
-
             $daysOfWeek = array('Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'); // Días de la semana
             $firstDayOfMonth = mktime(0, 0, 0, $month, 1, $year); // Primer día del mes
             $numberDays = date('t', $firstDayOfMonth); // Número de días en el mes
@@ -225,28 +240,28 @@
                     $dayOfWeek = 0;
                     $calendar .= "</tr><tr>";
                 }
-            
+
                 $currentDate = "$year-$month-$currentDay"; // Formatear la fecha actual
-            
+
                 $eventDetails = get_event_details($currentDate, $conn); // Obtener detalles de eventos para la fecha actual
                 $eventHTML = $eventDetails ? "<br><span class='event' onclick=\"showEvent('$eventDetails')\">Evento</span>" : ""; // Crear HTML para el evento
-            
+
                 $calendar .= "<td><a href='?date=$currentDate'>$currentDay</a>$eventHTML</td>"; // Crear celda con el día actual y los eventos
-            
+
                 $currentDay++;
                 $dayOfWeek++;
             }
-            
+
             if ($dayOfWeek != 7) { // Completar la última fila con celdas vacías si es necesario
                 $remainingDays = 7 - $dayOfWeek;
                 for ($l = 0; $l < $remainingDays; $l++) {
                     $calendar .= "<td></td>";
                 }
             }
-            
+
             $calendar .= "</tr>";
             $calendar .= "</table>";
-            
+
             return $calendar; // Devolver el HTML del calendario
         }
 
@@ -254,7 +269,7 @@
             $sql = "SELECT titulo, descripcion, hora FROM recordatorios WHERE fecha='$date'"; // Consulta SQL
             $result = $conn->query($sql);
             $eventDetails = "";
-        
+
             if ($result->num_rows > 0) { // Si hay resultados, formatear detalles de eventos
                 while($row = $result->fetch_assoc()) {
                     $hora = $row['hora'] ? $row['hora'] : 'Todo el día'; // Asignar "Todo el día" si no hay hora específica
@@ -263,7 +278,7 @@
                     $eventDetails .= "<strong>Descripción:</strong> {$row['descripcion']}<br><br>";
                 }
             }
-        
+
             return $eventDetails; // Devolver detalles de eventos
         }        
 
@@ -271,9 +286,25 @@
             die("Conexión fallida: " . $conn->connect_error);
         }
 
-        $dateComponents = getdate(); // Obtener componentes de la fecha actual
-        $month = $dateComponents['mon'];
-        $year = $dateComponents['year'];
+        if (isset($_GET['month']) && isset($_GET['year'])) { // Verificar si se han pasado los parámetros de mes y año
+            $month = intval($_GET['month']);
+            $year = intval($_GET['year']);
+        } else {
+            $dateComponents = getdate(); // Obtener componentes de la fecha actual
+            $month = $dateComponents['mon'];
+            $year = $dateComponents['year'];
+        }
+
+        // Calcular el mes anterior y siguiente
+        $prevMonth = $month == 1 ? 12 : $month - 1;
+        $prevYear = $month == 1 ? $year - 1 : $year;
+        $nextMonth = $month == 12 ? 1 : $month + 1;
+        $nextYear = $month == 12 ? $year + 1 : $year;
+
+        echo "<div class='nav-arrows'>";
+        echo "<a href='?month=$prevMonth&year=$prevYear'>&laquo; Mes Anterior</a>";
+        echo "<a href='?month=$nextMonth&year=$nextYear'>Mes Siguiente &raquo;</a>";
+        echo "</div>";
 
         echo draw_calendar($month, $year, $conn); // Dibujar el calendario para el mes y año actuales
 
